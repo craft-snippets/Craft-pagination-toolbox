@@ -37,7 +37,7 @@
         "developer": "Piotr Pogorzelski",
         "developerUrl": "http://craftsnippets.com/",
         "documentationUrl": "https://craftsnippets.com/docs/pagination-toolbox/",
-        "changelogUrl": "",
+        "changelogUrl": "https://github.com/craft-snippets/Craft-pagination-toolbox/blob/master/CHANGELOG.md",
         "components": {
             "imageToolboxService": "craftsnippets\\paginationtoolbox\\services\\PaginationService"
         },
