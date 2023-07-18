@@ -1,0 +1,46 @@
+{
+    "name": "craftsnippets/craft-pagination-toolbox",
+    "description": "Pagination toolbox",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "pagination toolbox",
+        "pagination"
+    ],
+    "support": {
+        "docs": "https://craftsnippets.com/docs/pagination-toolbox/",
+        "issues": "https://github.com/craft-snippets/Craft-pagination-toolbox/issues"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Piotr Pogorzelski",
+            "homepage": "http://craftsnippets.com/"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^4.0.0",
+        "forrest79/pagination": "*"
+    },
+    "autoload": {
+        "psr-4": {
+          "craftsnippets\\paginationtoolbox\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Pagination toolbox",
+        "handle": "pagination-toolbox",
+        "developer": "Piotr Pogorzelski",
+        "developerUrl": "http://craftsnippets.com/",
+        "documentationUrl": "https://craftsnippets.com/docs/pagination-toolbox/",
+        "changelogUrl": "",
+        "components": {
+            "imageToolboxService": "craftsnippets\\paginationtoolbox\\services\\PaginationService"
+        },
+        "class": "craftsnippets\\paginationtoolbox\\PaginationToolbox"
+    }
+}

@@ -1,0 +1,45 @@
+<div class="{{inputWidget.cssClassNumberWidget}}">
+	<div class="{{inputWidget.cssClassNumberWidgetInputOuter}}">
+		{{ tag('input', {
+			type: 'number',
+		    class: inputWidget.cssClassNumberWidgetInput,
+		    value: inputWidget.number,
+		    data: {
+		      (inputWidget.inputAttribute): true,
+		      (inputWidget.inputAttributeMax): inputWidget.total,
+		    },
+		    'aria-label': inputWidget.numberWidgetInstruction,
+		}) }} 
+	</div>
+	<div class="{{inputWidget.cssClassNumberWidgetLabel}}">
+		{{inputWidget.numberWidgetLabelOutOf}} {{inputWidget.total}}
+	</div>
+	<div hidden data-{{inputWidget.allLinksAttribute}}>
+		{% for link in inputWidget.allLinks %}
+			{{ tag('a', {
+			    href: link.linkUrl,
+			    data: {
+			      (link.numberDataAttribute): link.linkNumber,
+			    },
+			}) }} 			
+		{% endfor %}
+	</div>
+</div>
+
+{% js %}
+(function() { 
+	document.querySelector('body').addEventListener('change', e => {
+	  if(e.target.matches('[data-{{inputWidget.inputAttribute}}]')) {
+		var number = parseInt(e.target.value);
+		var max = parseInt(e.target.getAttribute('data-{{inputWidget.inputAttributeMax}}'));
+		if(number > max){
+			e.target.value = max;
+			number = max;
+		}	
+		var selector = '[data-{{inputWidget.allLinksAttribute}}] a[data-{{inputWidget.numberDataAttribute}}="' + number + '"]';
+		var link = document.querySelector(selector);
+		link.click();
+	  }
+	});
+})(); 
+{% endjs %}

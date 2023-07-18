@@ -1,0 +1,9 @@
+<nav class="{{pagination.cssClassNav}}" role="navigation" aria-label="{{pagination.ariaLabel}}">
+	<ul class="{{pagination.cssClassUl}}">
+		{% for link in pagination.links %}
+		<li class="{{pagination.cssClassLi}}">
+			{{link.render()}}
+		</li>
+		{% endfor %}
+	</ul>
+</nav>

@@ -1,0 +1,12 @@
+{{ tag(not link.isEllipsis ? 'a' : 'span', {
+    class: link.getCssClasses(),
+    html: link.content,
+    href: link.url,
+    disabled: link.isDisabled,
+    data: {
+      (link.numberDataAttribute): link.linkNumber,
+      (link.linkDisabledAttribute): link.isDisabled,
+    },
+    'aria-label': link.linkAltText,
+    'aria-current': link.isCurrent ? 'page' : null, 
+}) }} 
