@@ -8,7 +8,7 @@ Pagination Toolbox is Craft CMS plugin that helps with the use of pagination in 
 * Default **CSS styles**, with the option to disable them.
 * Page **number input widget**, allowing to visit specific pagination page by typing in its number.
 * **Logarithmic pagination**, outputting pagination links on the logarithmic scale. Best suited for paginating large datasets.
-* **Dynamic pagination**, allowing to change pagination subpages without refreshing whole page using **AJAX**. Properly updates the page URL and suppeorts forward and back buttons. Can fall back to regular pagination if Javascript is disabled. Available in the **PRO edition**.
+* **Dynamic pagination**, allowing to change pagination subpages without refreshing whole page using **AJAX**. Properly updates the page URL and suppeorts forward and back buttons. Can fall back to regular pagination if Javascript is disabled.
 
 ## Installation
 

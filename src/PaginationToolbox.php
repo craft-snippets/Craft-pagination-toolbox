@@ -60,20 +60,4 @@ class PaginationToolbox extends Plugin
         return new Settings();
     }
 
-    const EDITION_LITE = 'lite';
-    const EDITION_PRO = 'pro';
-
-    public static function editions(): array
-    {
-        return [
-            self::EDITION_LITE,
-            self::EDITION_PRO,
-        ];
-    }
-
-    public function isProEdition()
-    {
-        return $this->is(self::EDITION_PRO);
-    }
-
 }

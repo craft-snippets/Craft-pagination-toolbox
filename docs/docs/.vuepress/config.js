@@ -12,7 +12,7 @@ module.exports = {
         sidebar: [
             ['/', 'Introduction'],
             ['Basic', 'Basic usage'],
-            ['Dynamic', 'Dynamic pagination (PRO)'],
+            ['Dynamic', 'Dynamic pagination'],
             ['Options', 'Pagination options'],
         ],
         nav: [

@@ -2,7 +2,7 @@
     "name": "craftsnippets/craft-pagination-toolbox",
     "description": "Pagination toolbox",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "craft",
         "cms",
@@ -15,7 +15,7 @@
         "docs": "https://craftsnippets.com/docs/pagination-toolbox/",
         "issues": "https://github.com/craft-snippets/Craft-pagination-toolbox/issues"
     },
-    "license": "proprietary",
+    "license": "MIT",
     "authors": [
         {
             "name": "Piotr Pogorzelski",

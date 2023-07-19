@@ -1,10 +1,8 @@
-# Dynamic pagination (PRO edition)
+# Dynamic pagination
 
 Dynamic pagination allows users to browse paginated content lists **without refreshing the page**. It uses AJAX requests to replace the content when you click the pagination link. 
 
 Dynamic pagination has all the functionalities of standard pagination with benefit of making browsing paginated content lists faster and more fluid. It properly changes the URL address when subpage changes. It can be used with faceted filters or search forms - any query params stay in URL address when you change the subpage. If for some reason JS is disabled - dynamic pagination will not becemo unusable - it will just work like the regular pagination. 
-
-This functionality is available for PRO edition of the plugin.
 
 ## Using dynamic pagination
 

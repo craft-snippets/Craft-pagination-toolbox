@@ -376,11 +376,6 @@ class PaginationService extends Component
 
 	public function enableDynamicPagination(Paginate $pageInfo, string $template, array $options): void
 	{			
-
-        if(!PaginationToolbox::getInstance()->isProEdition()){
-            throw new \Exception('Dynamic pagination functionality requires the PRO edition of the plugin.');
-        }
-
 		$defaultOptions = [
 			'scrollOnRequest' => self::DYNAMIC_PAGINATION_ENABLE_SCROLL,
 			'cssClassLoading' => self::DEFAULT_CSS_CLASS_LOADING,

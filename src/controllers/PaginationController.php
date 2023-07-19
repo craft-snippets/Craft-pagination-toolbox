@@ -15,10 +15,7 @@ class PaginationController extends Controller
     protected array|int|bool $allowAnonymous = true;
 
     public function actionGetPaginatedPage()
-    {        
-        if(!PaginationToolbox::getInstance()->isProEdition()){
-            throw new \Exception('Dynamic pagination functionality requires the PRO edition of the plugin.');
-        }        
+    {           
         return PaginationToolbox::getInstance()->pagination->renderPaginatedPage();
     }
 
