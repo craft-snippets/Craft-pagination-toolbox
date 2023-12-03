@@ -26,7 +26,7 @@ To install the plugin, follow these instructions.
 
 ## Documentation
 
-Click here for [Pagination toolbox documentation](http://craftsnippets.com/docs/image-toolbox)
+Click here for [Pagination toolbox documentation](https://craftsnippets.com/docs/pagination-toolbox/)
 
 ## Author
 
