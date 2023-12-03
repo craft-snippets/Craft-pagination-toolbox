@@ -43,10 +43,7 @@
                 if (dynamicPaginationCurrentRequest.status === 200) {
 
                     // update content
-                    var inside = document.createElement('div')
-                    inside.innerHTML = dynamicPaginationCurrentRequest.response
-                    inside = inside.firstChild.innerHTML 
-                    document.querySelector(dynamicPaginationSettings.wrapperSelector).innerHTML = inside
+                    document.querySelector(dynamicPaginationSettings.wrapperSelector).outerHTML = dynamicPaginationCurrentRequest.response
 
                     // update url
                     if(updatedUrl){
