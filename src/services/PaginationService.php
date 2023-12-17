@@ -15,6 +15,7 @@ use craftsnippets\paginationtoolbox\models\PaginationWidget;
 
 use craftsnippets\paginationtoolbox\PaginationToolbox;
 use craftsnippets\paginationtoolbox\assetbundles\PaginationToolboxAsset;
+use craftsnippets\paginationtoolbox\helpers\Common;
 
 use craft\web\twig\variables\Paginate;
 
@@ -435,15 +436,24 @@ class PaginationService extends Component
 
 
 		$jsString = '
-			var dynamicPaginationSettings = ' . json_encode($dynamicPaginationSettings) .';
+			let dynamicPaginationSettings = ' . json_encode($dynamicPaginationSettings) .';
 		';
 
 		Craft::$app->view->registerJs(
 		    $jsString,
-		    Craft::$app->view::POS_BEGIN
+		    Craft::$app->view::POS_END
 		);
 
-	    Craft::$app->view->registerAssetBundle(PaginationToolboxAsset::class);
+//        $obj = new PaginationToolboxAsset;
+//        $path = $obj->sourcePath . '/' . $obj->js[0];
+//        $jsString = file_get_contents($path);
+//        Craft::$app->view->registerJs(
+//            $jsString,
+//            Craft::$app->view::POS_END
+//        );
+
+        Common::insertAssetBundle(PaginationToolboxAsset::class);
+
 	}
 
 	public function getContainerAttribute(): string

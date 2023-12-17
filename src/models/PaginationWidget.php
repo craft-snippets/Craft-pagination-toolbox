@@ -8,7 +8,7 @@ use Craft;
 use craft\base\Model;
 use craft\helpers\Template;
 use craftsnippets\paginationtoolbox\assetbundles\PaginationCssAsset;
-
+use craftsnippets\paginationtoolbox\helpers\Common;
 
 class PaginationWidget extends Model
 {
@@ -60,7 +60,7 @@ public function render()
 
 	// default css
 	if($this->options->includeDefaultCss == true){
-		$this->registerCSSAssets();
+		$this->registerCssAssets();
 	}
 
 	$context = [
@@ -101,12 +101,13 @@ public function addSeoTags()
     }
 }
 
-public function registerCSSAssets()
+public function registerCssAssets()
 {
     if(Craft::$app->getRequest()->getIsSiteRequest() == false){
         return;
     }
-	Craft::$app->view->registerAssetBundle(PaginationCssAsset::class);
+//	Craft::$app->view->registerAssetBundle(PaginationCssAsset::class);
+    Common::insertAssetBundle(PaginationCssAsset::class);
 }
 
 }
