@@ -375,7 +375,7 @@ class PaginationService extends Component
 	}
 
 
-	public function enableDynamicPagination(Paginate $pageInfo, string $template, array $options): void
+	public function enableDynamicPagination(string $template, array $options): void
 	{			
 		$defaultOptions = [
 			'scrollOnRequest' => self::DYNAMIC_PAGINATION_ENABLE_SCROLL,
@@ -387,12 +387,21 @@ class PaginationService extends Component
 
 		// register js - if not ajax request
 		if(!Craft::$app->getRequest()->getIsAjax()){
-			$this->injectDynamicPaginationJs($pageInfo, $template, $options);
+			$this->injectDynamicPaginationJs($template, $options);
 		}
 	}
 
+    public function getBaseUrl()
+    {
+        $request = Craft::$app->request;
+        $pageTrigger = Craft::$app->getConfig()->getGeneral()->getPageTrigger();
+        $baseUrl = $request->getAbsoluteUrl();
+        $baseUrl = explode('?', $baseUrl)[0];
+        $baseUrl = preg_replace('/\/' . $pageTrigger . '\d+/', '', $baseUrl);
+        return $baseUrl;
+    }
 
-	private function injectDynamicPaginationJs(Paginate $pageInfo, string $template, object $options): void
+	private function injectDynamicPaginationJs(string $template, object $options): void
 	{
         if(Craft::$app->getRequest()->getIsSiteRequest() == false){
             return;
@@ -404,8 +413,10 @@ class PaginationService extends Component
 		// data to send with ajax request
 		$requestData = [];
 
-		$baseUrl = $pageInfo->getPageUrl(1);
-		$baseUrl = explode('?', $baseUrl)[0];
+//		$baseUrl = $pageInfo->getPageUrl(1);
+//		$baseUrl = explode('?', $baseUrl)[0];
+
+        $baseUrl = $this->getBaseUrl();
 		$queryParams = Craft::$app->getRequest()->queryStringWithoutPath;
 		if($queryParams != ''){
 			$queryParams = '?' . $queryParams;

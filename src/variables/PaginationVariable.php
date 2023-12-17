@@ -15,9 +15,9 @@ class PaginationVariable
         return PaginationToolbox::getInstance()->pagination->getPagination($pageInfo, $options);
     }
 
-    public function enableDynamicPagination($pageInfo, $template, $options = [])
+    public function enableDynamicPagination($template, $options = [])
     {
-        return PaginationToolbox::getInstance()->pagination->enableDynamicPagination($pageInfo, $template, $options);
+        return PaginationToolbox::getInstance()->pagination->enableDynamicPagination( $template, $options);
     }
 
     public function getContainerAttribute()
