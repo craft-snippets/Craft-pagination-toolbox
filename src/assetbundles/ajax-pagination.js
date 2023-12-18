@@ -1,10 +1,12 @@
 (function(){
 
     // ajax request
-    var dynamicPaginationCurrentRequest = null;  
-    function dynamicPaginationChangePage(pageNumber, updatedUrl = null){
+    var dynamicPaginationCurrentRequest = null;
 
-        var wrapperElement = document.querySelector(dynamicPaginationSettings.wrapperSelector);
+    let wrapperElement = document.querySelector('[data-dynamic-pagination-wrapper]');
+    let dynamicPaginationSettings = JSON.parse(wrapperElement.getAttribute('data-dynamic-pagination-data'));
+
+    function dynamicPaginationChangePage(pageNumber, updatedUrl = null){
 
         // add loading class
         if(dynamicPaginationSettings.usePreloader){
@@ -28,7 +30,7 @@
 
         // before request event
         const eventBefore = new Event('dynamic-pagination-before');
-        document.querySelector(dynamicPaginationSettings.wrapperSelector).dispatchEvent(eventBefore);
+        wrapperElement.dispatchEvent(eventBefore);
 
         // create request
         dynamicPaginationCurrentRequest = new XMLHttpRequest();
@@ -43,7 +45,7 @@
                 if (dynamicPaginationCurrentRequest.status === 200) {
 
                     // update content
-                    document.querySelector(dynamicPaginationSettings.wrapperSelector).outerHTML = dynamicPaginationCurrentRequest.response
+                    wrapperElement.innerHTML = dynamicPaginationCurrentRequest.response
 
                     // update url
                     if(updatedUrl){
@@ -52,12 +54,12 @@
 
                     // after request event
                     const eventAfter = new Event('dynamic-pagination-after');
-                    document.querySelector(dynamicPaginationSettings.wrapperSelector).dispatchEvent(eventAfter);
+                    wrapperElement.dispatchEvent(eventAfter);
 
                 } else {
                     // error event
                     const eventError = new Event('dynamic-pagination-error');
-                    document.querySelector(dynamicPaginationSettings.wrapperSelector).dispatchEvent(eventError);                
+                    wrapperElement.dispatchEvent(eventError);
                 }
             }
         };
@@ -80,10 +82,10 @@
     document.querySelector('body').addEventListener('click', e => {
         e.preventDefault();
         const { target } = e;
-        if (
-            target.matches('[data-' + dynamicPaginationSettings.linkNumberDataAttribute + ']') && 
-            !target.matches('[data-' + dynamicPaginationSettings.linkDisabledAttribute + ']')
-        ) {
+        let selectorLinkNumber = '[data-' + dynamicPaginationSettings.linkNumberDataAttribute + ']';
+        let selectorLinkDisabled = '[data-' + dynamicPaginationSettings.linkDisabledAttribute + ']';
+        console.log(dynamicPaginationSettings)
+        if (target.matches(selectorLinkNumber) && !target.matches(selectorLinkDisabled)) {
             var updatedUrl = target.getAttribute('href');
             var selectedPage = target.getAttribute('data-' + dynamicPaginationSettings.linkNumberDataAttribute);
             dynamicPaginationChangePage(selectedPage, updatedUrl);    

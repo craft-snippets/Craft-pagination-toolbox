@@ -7,6 +7,7 @@ use craft\base\Component;
 
 use craft\helpers\Template;
 use craft\helpers\Html;
+use craft\helpers\UrlHelper;
 
 use craftsnippets\paginationtoolbox\models\PaginationLink;
 use craftsnippets\paginationtoolbox\models\PaginationInput;
@@ -43,8 +44,6 @@ class PaginationService extends Component
 	const LOGARITMIC_DEFAULT_SHOW_ELLIPSIS = true;
 
 	// dynamic
-	const DEFAULT_PAGINATION_CONTAINER_DATA_ATTRIBUTE = 'dynamic-pagination-container';
-	// const DEFAULT_PAGINATION_LIST_DATA_ATTRIBUTE = 'dynamic-pagination-list';
 	const DEFAULT_NUMBER_DATA_ATTRIBUTE = 'dynamic-pagination-link-number';
 	const DEFAULT_LINK_DISABLED_ATTRIBUTE = 'dynamic-pagination-link-disabled';
 	const DYNAMIC_PAGINATION_ENABLE_SCROLL = true;	
@@ -375,22 +374,6 @@ class PaginationService extends Component
 	}
 
 
-	public function enableDynamicPagination(string $template, array $options): void
-	{			
-		$defaultOptions = [
-			'scrollOnRequest' => self::DYNAMIC_PAGINATION_ENABLE_SCROLL,
-			'cssClassLoading' => self::DEFAULT_CSS_CLASS_LOADING,
-			'usePreloader' => self::DYNAMIC_PAGINATION_ENABLE_PRELOADER,
-		];
-		$options = array_merge($defaultOptions, $options);
-		$options = (object) $options;		
-
-		// register js - if not ajax request
-		if(!Craft::$app->getRequest()->getIsAjax()){
-			$this->injectDynamicPaginationJs($template, $options);
-		}
-	}
-
     public function getBaseUrl()
     {
         $request = Craft::$app->request;
@@ -401,21 +384,26 @@ class PaginationService extends Component
         return $baseUrl;
     }
 
-	private function injectDynamicPaginationJs(string $template, object $options): void
+	private function getDynamicPaginationData(string $template, array $variables, array $options)
 	{
-        if(Craft::$app->getRequest()->getIsSiteRequest() == false){
+
+        if(Craft::$app->getRequest()->getIsSiteRequest() == false || Craft::$app->getRequest()->getIsAjax() == true){
             return;
         }
 
-		$wrapperSelector = '[data-' . self::DEFAULT_PAGINATION_CONTAINER_DATA_ATTRIBUTE . ']';
-		// $listSelector = '[data-' . self::DEFAULT_PAGINATION_LIST_DATA_ATTRIBUTE . ']';
+        $defaultOptions = [
+        'scrollOnRequest' => self::DYNAMIC_PAGINATION_ENABLE_SCROLL,
+        'cssClassLoading' => self::DEFAULT_CSS_CLASS_LOADING,
+        'usePreloader' => self::DYNAMIC_PAGINATION_ENABLE_PRELOADER,
+        ];
+        $options = array_merge($defaultOptions, $options);
+        $options = (object) $options;
 
 		// data to send with ajax request
 		$requestData = [];
 
 //		$baseUrl = $pageInfo->getPageUrl(1);
 //		$baseUrl = explode('?', $baseUrl)[0];
-
         $baseUrl = $this->getBaseUrl();
 		$queryParams = Craft::$app->getRequest()->queryStringWithoutPath;
 		if($queryParams != ''){
@@ -425,6 +413,7 @@ class PaginationService extends Component
 		$requestData[PaginationToolbox::$plugin->getSettings()->paramBaseUrl] = $baseUrl;
 		$requestData[PaginationToolbox::$plugin->getSettings()->paramTemplate] = Craft::$app->getSecurity()->hashData($template);
 		$requestData[PaginationToolbox::$plugin->getSettings()->paramQueryParams] = $queryParams;
+        $requestData[PaginationToolbox::$plugin->getSettings()->paramVariables] = Craft::$app->getSecurity()->hashData(json_encode($variables));
 
 		// include also url params already existing in url, but ignore default page param
 		$initialRequest = Craft::$app->getRequest()->get();
@@ -433,62 +422,61 @@ class PaginationService extends Component
 
 		$dynamicPaginationSettings = [
 			'requestData' => $requestData,
-			'endpointUrl' => \craft\helpers\UrlHelper::actionUrl('pagination-toolbox/pagination/get-paginated-page'),
+			'endpointUrl' => UrlHelper::actionUrl('pagination-toolbox/pagination/get-paginated-page'),
 			'initialPage' => Craft::$app->getRequest()->getPageNum(),
 			'pageTrigger' => Craft::$app->getConfig()->getGeneral()->getPageTrigger(),
-			'wrapperSelector' => $wrapperSelector,
 			'cssClassLoading' => $options->cssClassLoading,
 			'usePreloader' => $options->usePreloader,
-			// 'listSelector' => $listSelector,
 			'linkNumberDataAttribute' => self::DEFAULT_NUMBER_DATA_ATTRIBUTE,
 			'linkDisabledAttribute' => self::DEFAULT_LINK_DISABLED_ATTRIBUTE,
 			'scrollOnRequest' => $options->scrollOnRequest,
 		];
 
+        return $dynamicPaginationSettings;
+	}
 
-		$jsString = '
-			let dynamicPaginationSettings = ' . json_encode($dynamicPaginationSettings) .';
-		';
+    public static function arrayHasObjects($array)
+    {
+        $hasObjects = false;
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                $hasObjects = self::arrayHasObjects($value);
+            } elseif (is_object($value)) {
+                $hasObjects = true;
+            }
+        }
+        return $hasObjects;
+    }
 
-		Craft::$app->view->registerJs(
-		    $jsString,
-		    Craft::$app->view::POS_END
-		);
+    public function includePaginatedList(string $template, array $variables, array $options)
+    {
 
-//        $obj = new PaginationToolboxAsset;
-//        $path = $obj->sourcePath . '/' . $obj->js[0];
-//        $jsString = file_get_contents($path);
-//        Craft::$app->view->registerJs(
-//            $jsString,
-//            Craft::$app->view::POS_END
-//        );
+        if(self::arrayHasObjects($variables)){
+            throw new \Exception('You cannot pass objects into dynamic pagination template. Try using object id instead.');
+        }
 
         Common::insertAssetBundle(PaginationToolboxAsset::class);
 
-	}
+        $pageHtml = $this->renderPaginatedPage($template, $variables);
+        $data = $this->getDynamicPaginationData($template, $variables, $options);
+        $data = json_encode($data);
+        $attributes = [
+            'data' => [
+                'dynamic-pagination-wrapper' => true,
+                'dynamic-pagination-data' => $data,
+            ],
+        ];
 
-	public function getContainerAttribute(): string
+        $html = Html::tag('div', $pageHtml, $attributes);
+        $html = Template::raw($html);
+        return $html;
+    }
+
+	public function renderPaginatedPage(string $template, array $variables)
 	{
-		$attribute = 'data-' . self::DEFAULT_PAGINATION_CONTAINER_DATA_ATTRIBUTE;
-		return $attribute;
-	}
-
-	public function renderPaginatedPage()
-	{
-	    $request = Craft::$app->getRequest();
-	    $templateEncoded = $request->get(PaginationToolbox::$plugin->getSettings()->paramTemplate);
-	    $templateDecoded = Craft::$app->security->validateData($templateEncoded);
-	    if($templateDecoded === false){
-	        throw new ServerErrorHttpException();
-	    }
-
-	    $context = [
-	        
-	    ];
-
 	    $html = Craft::$app->getView()->renderTemplate(
-	        $templateDecoded, 
-	        $context,
+	        $template,
+	        $variables,
 	        Craft::$app->view::TEMPLATE_MODE_SITE
 	    );
 	    $html = Template::raw($html);

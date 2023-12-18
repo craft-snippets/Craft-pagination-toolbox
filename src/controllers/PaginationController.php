@@ -15,8 +15,23 @@ class PaginationController extends Controller
     protected array|int|bool $allowAnonymous = true;
 
     public function actionGetPaginatedPage()
-    {           
-        return PaginationToolbox::getInstance()->pagination->renderPaginatedPage();
+    {
+        $request = Craft::$app->getRequest();
+
+        $templateEncoded = $request->get(PaginationToolbox::$plugin->getSettings()->paramTemplate);
+        $template = Craft::$app->security->validateData($templateEncoded);
+        if($template === false){
+            throw new ServerErrorHttpException('Invalid parameter');
+        }
+
+        $variablesEncoded = $request->get(PaginationToolbox::$plugin->getSettings()->paramVariables);
+        $variables = Craft::$app->security->validateData($variablesEncoded);
+        if($variables === false){
+            throw new ServerErrorHttpException('Invalid parameter');
+        }
+        $variablesArray = json_decode($variables, true);
+
+        return PaginationToolbox::getInstance()->pagination->renderPaginatedPage($template, $variablesArray);
     }
 
 }
