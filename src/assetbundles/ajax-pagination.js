@@ -86,8 +86,8 @@
         let selectorLinkDisabled = '[data-' + dynamicPaginationSettings.linkDisabledAttribute + ']';
         console.log(dynamicPaginationSettings)
         if (target.matches(selectorLinkNumber) && !target.matches(selectorLinkDisabled)) {
-            var updatedUrl = target.getAttribute('href');
-            var selectedPage = target.getAttribute('data-' + dynamicPaginationSettings.linkNumberDataAttribute);
+            let updatedUrl = target.getAttribute('href');
+            let selectedPage = target.getAttribute('data-' + dynamicPaginationSettings.linkNumberDataAttribute);
             dynamicPaginationChangePage(selectedPage, updatedUrl);    
         }
     });
