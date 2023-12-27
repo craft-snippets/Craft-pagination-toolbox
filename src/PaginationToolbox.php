@@ -15,8 +15,8 @@ use yii\base\Event;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\web\View;
 
-// use craft\web\UrlManager;
-// use craft\events\RegisterUrlRulesEvent;
+ use craft\web\UrlManager;
+ use craft\events\RegisterUrlRulesEvent;
 
 class PaginationToolbox extends Plugin
 {
@@ -51,7 +51,15 @@ class PaginationToolbox extends Plugin
                 $keyword = 'pagination-toolbox';
                 $event->roots[$keyword] = __DIR__ . '/templates';
             }
-        );    
+        );
+
+        // using route instead of controller directly to avoid setting p param in GET values
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) {
+            $routeUrl = $this->getSettings()->controllerUrl;
+            $event->rules = array_merge($event->rules, [
+                $routeUrl => 'pagination-toolbox/pagination/get-paginated-page',
+            ]);
+        });
 
     }
 

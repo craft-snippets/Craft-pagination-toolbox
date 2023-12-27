@@ -18,13 +18,15 @@ class PaginationController extends Controller
     {
         $request = Craft::$app->getRequest();
 
-        $templateEncoded = $request->get(PaginationToolbox::$plugin->getSettings()->paramTemplate);
+        // template param
+        $templateEncoded = $request->headers->get(PaginationToolbox::$plugin->getSettings()->paramTemplate);
         $template = Craft::$app->security->validateData($templateEncoded);
         if($template === false){
             throw new ServerErrorHttpException('Invalid parameter');
         }
 
-        $variablesEncoded = $request->get(PaginationToolbox::$plugin->getSettings()->paramVariables);
+        // variables param
+        $variablesEncoded = $request->headers->get(PaginationToolbox::$plugin->getSettings()->paramVariables);
         $variables = Craft::$app->security->validateData($variablesEncoded);
         if($variables === false){
             throw new ServerErrorHttpException('Invalid parameter');

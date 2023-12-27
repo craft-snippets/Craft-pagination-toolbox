@@ -24,9 +24,7 @@
         }
 
         // url
-        requestUrl = dynamicPaginationSettings.endpointUrl + '/' + dynamicPaginationSettings.pageTrigger + pageNumber;
-        params = new URLSearchParams(dynamicPaginationSettings.requestData).toString()
-        requestUrl = requestUrl + '&' + params
+        let requestUrl = dynamicPaginationSettings.endpointUrl + '/' + dynamicPaginationSettings.pageTrigger + pageNumber + window.location.search;
 
         // before request event
         const eventBefore = new Event('dynamic-pagination-before');
@@ -35,6 +33,11 @@
         // create request
         dynamicPaginationCurrentRequest = new XMLHttpRequest();
         dynamicPaginationCurrentRequest.open('GET', requestUrl, true);
+
+        // assign custom headers
+        Object.entries(dynamicPaginationSettings.requestData).forEach(function([key, value]){
+            dynamicPaginationCurrentRequest.setRequestHeader(key, value);
+        });
 
         // on complete
         dynamicPaginationCurrentRequest.onreadystatechange = function () {
@@ -84,7 +87,6 @@
         const { target } = e;
         let selectorLinkNumber = '[data-' + dynamicPaginationSettings.linkNumberDataAttribute + ']';
         let selectorLinkDisabled = '[data-' + dynamicPaginationSettings.linkDisabledAttribute + ']';
-        console.log(dynamicPaginationSettings)
         if (target.matches(selectorLinkNumber) && !target.matches(selectorLinkDisabled)) {
             let updatedUrl = target.getAttribute('href');
             let selectedPage = target.getAttribute('data-' + dynamicPaginationSettings.linkNumberDataAttribute);

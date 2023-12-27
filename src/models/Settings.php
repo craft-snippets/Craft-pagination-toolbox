@@ -12,6 +12,6 @@ class Settings extends Model
 {
 	public $paramBaseUrl = 'dynamicPaginationBaseUrl';
 	public $paramTemplate = 'dynamicPaginationTemplate';
-	public $paramQueryParams = 'dynamicPaginationQueryParams';
     public $paramVariables = 'dynamicPaginationVariables';
+    public $controllerUrl = 'get-dynamic-pagination';
 }

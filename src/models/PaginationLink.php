@@ -39,16 +39,15 @@ private function changeUrlForDynamic()
 	if(
 		// $request->getIsAjax() && 
 		!is_null($this->linkUrl) &&
-		!is_null($request->get(PaginationToolbox::$plugin->getSettings()->paramBaseUrl)) &&
-		!is_null($request->get(PaginationToolbox::$plugin->getSettings()->paramTemplate)) &&
-		!is_null($request->get(PaginationToolbox::$plugin->getSettings()->paramQueryParams))
+		!is_null($request->headers->get(PaginationToolbox::$plugin->getSettings()->paramBaseUrl)) &&
+		!is_null($request->headers->get(PaginationToolbox::$plugin->getSettings()->paramTemplate))
 	){
 		$this->linkUrl = 
-		$request->get(PaginationToolbox::$plugin->getSettings()->paramBaseUrl) . 
+		$request->headers->get(PaginationToolbox::$plugin->getSettings()->paramBaseUrl) .
 		'/' . 
 		Craft::$app->getConfig()->getGeneral()->getPageTrigger() . 
-		$this->linkNumber . 
-		$request->get(PaginationToolbox::$plugin->getSettings()->paramQueryParams);
+		$this->linkNumber .
+        ($request->queryString ? '?' . $request->queryString : '');
 	}		
 }
 

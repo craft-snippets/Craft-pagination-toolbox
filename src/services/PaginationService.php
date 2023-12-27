@@ -392,9 +392,9 @@ class PaginationService extends Component
         }
 
         $defaultOptions = [
-        'scrollOnRequest' => self::DYNAMIC_PAGINATION_ENABLE_SCROLL,
-        'cssClassLoading' => self::DEFAULT_CSS_CLASS_LOADING,
-        'usePreloader' => self::DYNAMIC_PAGINATION_ENABLE_PRELOADER,
+            'scrollOnRequest' => self::DYNAMIC_PAGINATION_ENABLE_SCROLL,
+            'cssClassLoading' => self::DEFAULT_CSS_CLASS_LOADING,
+            'usePreloader' => self::DYNAMIC_PAGINATION_ENABLE_PRELOADER,
         ];
         $options = array_merge($defaultOptions, $options);
         $options = (object) $options;
@@ -405,24 +405,14 @@ class PaginationService extends Component
 //		$baseUrl = $pageInfo->getPageUrl(1);
 //		$baseUrl = explode('?', $baseUrl)[0];
         $baseUrl = $this->getBaseUrl();
-		$queryParams = Craft::$app->getRequest()->queryStringWithoutPath;
-		if($queryParams != ''){
-			$queryParams = '?' . $queryParams;
-		}
 
 		$requestData[PaginationToolbox::$plugin->getSettings()->paramBaseUrl] = $baseUrl;
 		$requestData[PaginationToolbox::$plugin->getSettings()->paramTemplate] = Craft::$app->getSecurity()->hashData($template);
-		$requestData[PaginationToolbox::$plugin->getSettings()->paramQueryParams] = $queryParams;
         $requestData[PaginationToolbox::$plugin->getSettings()->paramVariables] = Craft::$app->getSecurity()->hashData(json_encode($variables));
-
-		// include also url params already existing in url, but ignore default page param
-		$initialRequest = Craft::$app->getRequest()->get();
-		unset($initialRequest[Craft::$app->getConfig()->getGeneral()->pathParam]);
-		$requestData = array_merge($requestData, $initialRequest);
 
 		$dynamicPaginationSettings = [
 			'requestData' => $requestData,
-			'endpointUrl' => UrlHelper::actionUrl('pagination-toolbox/pagination/get-paginated-page'),
+			'endpointUrl' => UrlHelper::url(PaginationToolbox::$plugin->getSettings()->controllerUrl),
 			'initialPage' => Craft::$app->getRequest()->getPageNum(),
 			'pageTrigger' => Craft::$app->getConfig()->getGeneral()->getPageTrigger(),
 			'cssClassLoading' => $options->cssClassLoading,
